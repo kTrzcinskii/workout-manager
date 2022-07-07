@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { getAllWorkoutsInput } from "../schema/workout";
 import { createRouter } from "./context";
 
 export const workoutRouter = createRouter()
@@ -12,12 +13,16 @@ export const workoutRouter = createRouter()
     }
   )
   .query("get-all-workouts", {
-    async resolve({ ctx }) {
+    input: getAllWorkoutsInput,
+    async resolve({ ctx, input }) {
       const userEmail = ctx.session?.user?.email;
       if (!userEmail) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
+      const { limit, page } = input;
       const workouts = await ctx.prisma.workout.findMany({
+        skip: limit * page,
+        take: limit + 1,
         where: {
           user: {
             email: userEmail,
@@ -31,6 +36,11 @@ export const workoutRouter = createRouter()
         },
       });
 
+      let hasMore = false;
+      if (workouts.length > limit) {
+        (hasMore = true), workouts.pop();
+      }
+
       const responseWorkouts = workouts.map(async (workout) => {
         const numberOfExs = await ctx.prisma.exercise.count({
           where: { workoutId: workout.id },
@@ -39,6 +49,6 @@ export const workoutRouter = createRouter()
         return { ...workout, numberOfExs };
       });
 
-      return responseWorkouts;
+      return { workouts: responseWorkouts, hasMore };
     },
   });
