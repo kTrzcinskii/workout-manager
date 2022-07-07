@@ -1,5 +1,9 @@
 import { TRPCError } from "@trpc/server";
-import { getAllWorkoutsInput, getSingleWorkoutInput } from "../schema/workout";
+import {
+  createWorkoutInput,
+  getAllWorkoutsInput,
+  getSingleWorkoutInput,
+} from "../schema/workout";
 import { createRouter } from "./context";
 
 export const workoutRouter = createRouter()
@@ -74,5 +78,35 @@ export const workoutRouter = createRouter()
       }
 
       return workout;
+    },
+  })
+  .mutation("create-workout", {
+    input: createWorkoutInput,
+    async resolve({ ctx, input }) {
+      const { title, description, breakDuration, exercises } = input;
+      const userEmail = ctx.session?.user?.email;
+      if (!userEmail) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      const newWorkout = await ctx.prisma.workout.create({
+        data: {
+          breakDuration,
+          title,
+          description,
+          exercises: { createMany: { data: [...exercises] } },
+          user: {
+            connect: {
+              email: userEmail,
+            },
+          },
+        },
+      });
+
+      if (!newWorkout) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
+
+      return { successful: true, workoutId: newWorkout.id };
     },
   });

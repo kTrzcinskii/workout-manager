@@ -8,3 +8,17 @@ export const getAllWorkoutsInput = z.object({
 export const getSingleWorkoutInput = z.object({
   id: z.string(),
 });
+
+const createExerciseInput = z.object({
+  title: z.string(),
+  series: z.number(),
+  repsInOneSeries: z.number(),
+  weight: z.number().optional(),
+});
+
+export const createWorkoutInput = z.object({
+  title: z.string(),
+  description: z.string(),
+  breakDuration: z.number().min(0),
+  exercises: z.array(createExerciseInput),
+});
