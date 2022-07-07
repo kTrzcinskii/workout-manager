@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { getAllWorkoutsInput } from "../schema/workout";
+import { getAllWorkoutsInput, getSingleWorkoutInput } from "../schema/workout";
 import { createRouter } from "./context";
 
 export const workoutRouter = createRouter()
@@ -50,5 +50,29 @@ export const workoutRouter = createRouter()
       });
 
       return { workouts: responseWorkouts, hasMore };
+    },
+  })
+  .query("get-single-workout", {
+    input: getSingleWorkoutInput,
+    async resolve({ ctx, input }) {
+      const userEmail = ctx.session?.user?.email;
+      if (!userEmail) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      const workoutId = input.id;
+
+      const workout = await ctx.prisma.workout.findUnique({
+        where: { id: workoutId },
+      });
+      const user = await ctx.prisma.user.findFirst({
+        where: { workouts: { some: { id: workoutId } } },
+      });
+
+      if (user?.email !== userEmail || !workout) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      return workout;
     },
   });
