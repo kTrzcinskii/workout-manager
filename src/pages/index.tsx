@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   const { data: session } = useSession();
 
   if (session) {
-    return <Dashboard session={session} />;
+    return <Dashboard />;
   }
 
   return <LoginSection />;
