@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import { CgProfile } from "react-icons/cg";
 import { FiSettings } from "react-icons/fi";
 import { VscSignOut } from "react-icons/vsc";
+import ErrorMessage from "./ErrorMessage";
 
 interface NavbarProps {
   children?: ReactNode;
@@ -26,8 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
   const router = useRouter();
 
   if (!session) {
-    // TODO:
-    return <>TODO</>;
+    return <ErrorMessage customMessage="You aren't signed in." />;
   }
 
   return (
