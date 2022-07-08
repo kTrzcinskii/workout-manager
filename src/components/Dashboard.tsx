@@ -39,7 +39,7 @@ const Dashboard: React.FC = () => {
     return (
       <Navbar>
         <VStack
-          h={`calc(100vh - ${navbarHeight})`}
+          minH={`calc(100vh - ${navbarHeight})`}
           bgColor='gray.700'
           w='full'
           justifyContent='center'
