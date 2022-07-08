@@ -83,7 +83,8 @@ export const workoutRouter = createRouter()
   .mutation("create-workout", {
     input: createWorkoutInput,
     async resolve({ ctx, input }) {
-      const { title, description, breakDuration, exercises } = input;
+      const { title, description, exercises } = input;
+      const breakDuration = Number(input.breakDuration);
       const userEmail = ctx.session?.user?.email;
       if (!userEmail) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
