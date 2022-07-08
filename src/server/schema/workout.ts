@@ -11,9 +11,12 @@ export const getSingleWorkoutInput = z.object({
 
 export const createExerciseInput = z.object({
   title: z.string().min(1, "Title is required"),
-  series: z.number().min(1),
-  repsInOneSeries: z.number().min(1),
-  weight: z.number().optional(),
+  series: z.number().min(1).or(z.string().min(1, "Series are required")),
+  repsInOneSeries: z
+    .number()
+    .min(1)
+    .or(z.string().min(1, "Reps in one series are required")),
+  weight: z.number().optional().or(z.string().optional()),
 });
 
 export type createExerciseSchema = z.TypeOf<typeof createExerciseInput>;

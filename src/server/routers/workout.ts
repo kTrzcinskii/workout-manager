@@ -90,12 +90,20 @@ export const workoutRouter = createRouter()
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
+      const transformedExercises = exercises.map((exercise) => {
+        const { title } = exercise;
+        const weight = exercise.weight ? Number(exercise.weight) : undefined;
+        const series = Number(exercise.series);
+        const repsInOneSeries = Number(exercise.repsInOneSeries);
+        return { title, weight, series, repsInOneSeries };
+      });
+
       const newWorkout = await ctx.prisma.workout.create({
         data: {
           breakDuration,
           title,
           description,
-          exercises: { createMany: { data: [...exercises] } },
+          exercises: { createMany: { data: [...transformedExercises] } },
           user: {
             connect: {
               email: userEmail,
