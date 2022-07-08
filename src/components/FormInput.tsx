@@ -1,34 +1,38 @@
 import {
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Input,
-  FormErrorMessage,
-  InputGroup,
-  InputLeftElement,
   InputProps,
+  NumberInput,
+  NumberInputField,
 } from "@chakra-ui/react";
-import { InputHTMLAttributes, ReactNode, useRef, useState } from "react";
+import { InputHTMLAttributes, useState } from "react";
 
 type FormInputProps = InputHTMLAttributes<HTMLInputElement> &
   InputProps & {
     label?: string;
     errors: any;
     register: any;
-    icon?: ReactNode;
     registerName: string;
+    isNumberInput?: boolean;
+    minValue?: number;
+    maxValue?: number;
   };
 
 const FormInput: React.FC<FormInputProps> = ({
   label,
   errors,
   register,
-  icon,
   registerName,
+  isNumberInput = false,
+  minValue,
+  maxValue,
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   return (
-    <FormControl isInvalid={errors.name} width='full'>
+    <FormControl isInvalid={errors[registerName]} width='full'>
       {label && (
         <FormLabel
           htmlFor={registerName}
@@ -37,8 +41,28 @@ const FormInput: React.FC<FormInputProps> = ({
           {label}
         </FormLabel>
       )}
-      <InputGroup>
-        {icon && <InputLeftElement>{icon}</InputLeftElement>}
+      {isNumberInput ? (
+        <NumberInput
+          focusBorderColor='purple.400'
+          min={minValue}
+          max={maxValue}
+        >
+          <NumberInputField
+            id={registerName}
+            {...register(registerName)}
+            {...props}
+            borderWidth={2}
+            color='white'
+            _placeholder={{ color: "gray.300" }}
+            focusBorderColor='purple.400'
+            borderColor='white'
+            _hover={{}}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            name={registerName}
+          />
+        </NumberInput>
+      ) : (
         <Input
           id={registerName}
           {...register(registerName)}
@@ -53,8 +77,10 @@ const FormInput: React.FC<FormInputProps> = ({
           onBlur={() => setIsFocused(false)}
           name={registerName}
         />
-      </InputGroup>
-      <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
+      )}
+      <FormErrorMessage>
+        {errors[registerName] && errors[registerName].message}
+      </FormErrorMessage>
     </FormControl>
   );
 };
