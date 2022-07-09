@@ -87,7 +87,8 @@ export const workoutRouter = createRouter()
         const weight = exercise.weight ? Number(exercise.weight) : undefined;
         const series = Number(exercise.series);
         const repsInOneSeries = Number(exercise.repsInOneSeries);
-        return { title, weight, series, repsInOneSeries };
+        const index = Number(exercise.index);
+        return { title, weight, series, repsInOneSeries, index };
       });
 
       const newWorkout = await ctx.prisma.workout.create({

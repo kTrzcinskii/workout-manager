@@ -16,6 +16,7 @@ export const createExerciseInput = z.object({
     .number()
     .min(1)
     .or(z.string().min(1, "Reps in one series are required")),
+  index: z.number().min(0).or(z.string().min(1, "Index is required")),
   weight: z.number().optional().or(z.string().optional()),
 });
 

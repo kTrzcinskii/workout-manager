@@ -141,6 +141,13 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
         type='number'
         setMainFocus={setMainFocus}
       />
+      <Input
+        id={`exercises.${index}.index`}
+        {...register(`exercises.${index}.index` as const)}
+        name={`exercises.${index}.index`}
+        display='none'
+        value={index}
+      />
       <Button colorScheme='red' onClick={() => remove(index)}>
         Delete Exercise
       </Button>
