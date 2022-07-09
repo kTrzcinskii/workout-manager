@@ -1,3 +1,4 @@
+import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
   FormControl,
   FormLabel,
@@ -7,9 +8,11 @@ import {
   VStack,
   Heading,
   Button,
+  HStack,
+  IconButton,
 } from "@chakra-ui/react";
 import { Dispatch, InputHTMLAttributes, SetStateAction, useState } from "react";
-import { UseFieldArrayRemove } from "react-hook-form";
+import { UseFieldArrayMove, UseFieldArrayRemove } from "react-hook-form";
 
 interface ExerciseInputProps {
   index: number;
@@ -17,6 +20,8 @@ interface ExerciseInputProps {
   register: any;
   remove: UseFieldArrayRemove;
   id: any;
+  move: UseFieldArrayMove;
+  fieldsLength: number;
 }
 
 type SingleExerciseInputProps = InputHTMLAttributes<HTMLInputElement> &
@@ -86,8 +91,11 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
   register,
   remove,
   id,
+  move,
+  fieldsLength,
 }) => {
   const [mainFocus, setMainFocus] = useState(false);
+  console.log(index + " rendered");
   return (
     <VStack
       w='full'
@@ -99,9 +107,39 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
       rounded='lg'
       key={id}
     >
-      <Heading color='purple.400' fontSize={{ base: "2xl", md: "3xl" }}>
-        Exercise number {index + 1}
-      </Heading>
+      <HStack w='full' justifyContent='space-between'>
+        <Heading color='purple.400' fontSize={{ base: "2xl", md: "3xl" }}>
+          Exercise number {index + 1}
+        </Heading>
+        <VStack>
+          <IconButton
+            aria-label='move up'
+            icon={<TriangleUpIcon />}
+            colorScheme='purple'
+            fontSize='2xl'
+            variant='ghost'
+            _hover={{
+              bgColor: "purple.500",
+              color: "white",
+            }}
+            disabled={index === 0}
+            onClick={() => move(index, index - 1)}
+          />
+          <IconButton
+            aria-label='move down'
+            icon={<TriangleDownIcon />}
+            colorScheme='purple'
+            fontSize='2xl'
+            variant='ghost'
+            _hover={{
+              bgColor: "purple.500",
+              color: "white",
+            }}
+            disabled={fieldsLength - 1 === index}
+            onClick={() => move(index, index + 1)}
+          />
+        </VStack>
+      </HStack>
       <SignleExerciseInput
         errors={errors}
         register={register}
