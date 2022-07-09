@@ -79,6 +79,7 @@ model Exercise {
   title           String
   series          Int
   repsInOneSeries Int
+  index           Int
   weight          Int?
 
   workout   Workout @relation(fields: [workoutId], references: [id])
