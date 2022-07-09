@@ -1,4 +1,12 @@
-import { Button, Text, VStack } from "@chakra-ui/react";
+import { Search2Icon } from "@chakra-ui/icons";
+import {
+  Button,
+  HStack,
+  IconButton,
+  Input,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -12,11 +20,14 @@ const Dashboard: React.FC = () => {
   const { data: session } = useSession();
 
   const [page, setPage] = useState(0);
+  const [title, setTitle] = useState("");
+  const [titleFilter, setTitleFilter] = useState("");
   const { data, isLoading, isError, error } = trpc.useQuery([
     "workouts.get-all-workouts",
     {
       limit: 10,
       page,
+      title: titleFilter,
     },
   ]);
 
@@ -35,7 +46,7 @@ const Dashboard: React.FC = () => {
     return <ErrorMessage customMessage={message} />;
   }
 
-  if (!data.workouts || data.workouts.length === 0) {
+  if ((!data.workouts || data.workouts.length === 0) && titleFilter === "") {
     return (
       <Navbar>
         <VStack
@@ -65,9 +76,32 @@ const Dashboard: React.FC = () => {
     );
   }
 
+  console.log(data.workouts);
   return (
     <Navbar>
-      <Text>test</Text>
+      <VStack
+        minH={`calc(100vh - ${navbarHeight})`}
+        bgColor='gray.700'
+        w='full'
+        pt={10}
+      >
+        <HStack width={{ base: "300px", md: "350px", lg: "450px" }}>
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            bgColor='white'
+            focusBorderColor='purple.500'
+            borderWidth={2}
+            placeholder='Search for your project...'
+          />
+          <IconButton
+            aria-label='search'
+            icon={<Search2Icon />}
+            colorScheme='purple'
+            onClick={() => setTitleFilter(title)}
+          />
+        </HStack>
+      </VStack>
     </Navbar>
   );
 };
