@@ -1,15 +1,15 @@
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
-  FormControl,
-  FormLabel,
-  Input,
-  FormErrorMessage,
-  InputProps,
-  VStack,
-  Heading,
   Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
   HStack,
   IconButton,
+  Input,
+  InputProps,
+  VStack,
 } from "@chakra-ui/react";
 import { Dispatch, InputHTMLAttributes, SetStateAction, useState } from "react";
 import { UseFieldArrayMove, UseFieldArrayRemove } from "react-hook-form";
@@ -95,7 +95,6 @@ const ExerciseInput: React.FC<ExerciseInputProps> = ({
   fieldsLength,
 }) => {
   const [mainFocus, setMainFocus] = useState(false);
-  console.log(index + " rendered");
   return (
     <VStack
       w='full'
