@@ -45,15 +45,7 @@ export const workoutRouter = createRouter()
         (hasMore = true), workouts.pop();
       }
 
-      const responseWorkouts = workouts.map(async (workout) => {
-        const numberOfExs = await ctx.prisma.exercise.count({
-          where: { workoutId: workout.id },
-        });
-
-        return { ...workout, numberOfExs };
-      });
-
-      return { workouts: responseWorkouts, hasMore };
+      return { workouts, hasMore };
     },
   })
   .query("get-single-workout", {
