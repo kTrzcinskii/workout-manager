@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { navbarHeight } from "../constants";
 import { trpc } from "../utils/trpc";
 import ErrorMessage from "./ErrorMessage";
@@ -30,6 +30,12 @@ const Dashboard: React.FC = () => {
       title: titleFilter,
     },
   ]);
+
+  useEffect(() => {
+    if (title === "") {
+      setTitleFilter("");
+    }
+  }, [title, setTitleFilter]);
 
   const router = useRouter();
 
