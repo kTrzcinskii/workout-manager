@@ -33,3 +33,7 @@ export const createWorkoutInput = z.object({
 });
 
 export type createWorkoutSchema = z.TypeOf<typeof createWorkoutInput>;
+
+export const deleteWorkoutInput = z.object({
+  workoutId: z.string().min(1),
+});

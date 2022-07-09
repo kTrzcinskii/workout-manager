@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import {
   createWorkoutInput,
+  deleteWorkoutInput,
   getAllWorkoutsInput,
   getSingleWorkoutInput,
 } from "../schema/workout";
@@ -110,5 +111,25 @@ export const workoutRouter = createRouter()
       }
 
       return { successful: true, workoutId: newWorkout.id };
+    },
+  })
+  .mutation("delete-workout", {
+    input: deleteWorkoutInput,
+    async resolve({ ctx, input }) {
+      const userEmail = ctx.session?.user?.email;
+      if (!userEmail) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+      const workoutToDelete = await ctx.prisma.workout.findUnique({
+        where: { id: input.workoutId },
+        include: { user: true },
+      });
+      if (!workoutToDelete || workoutToDelete.user.email !== userEmail) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      await ctx.prisma.workout.delete({ where: { id: input.workoutId } });
+
+      return { successful: true };
     },
   });
