@@ -25,12 +25,19 @@ export const workoutRouter = createRouter()
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const { limit, page } = input;
+      const titleFilterObj: any = {};
+      if (input.title) {
+        titleFilterObj.contains = input.title;
+      }
       const workouts = await ctx.prisma.workout.findMany({
         skip: limit * page,
         take: limit + 1,
         where: {
           user: {
             email: userEmail,
+          },
+          title: {
+            ...titleFilterObj,
           },
         },
         select: {
