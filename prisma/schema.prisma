@@ -62,7 +62,6 @@ model Workout {
   updatedAt DateTime @updatedAt
 
   title         String
-  favorite      Boolean    @default(false)
   description   String?
   breakDuration Int
   exercises     Exercise[]

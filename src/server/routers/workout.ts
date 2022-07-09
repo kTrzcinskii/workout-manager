@@ -44,7 +44,6 @@ export const workoutRouter = createRouter()
           id: true,
           createdAt: true,
           title: true,
-          favorite: true,
         },
       });
 
