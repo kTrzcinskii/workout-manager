@@ -32,6 +32,7 @@ export const workoutRouter = createRouter()
       const workouts = await ctx.prisma.workout.findMany({
         skip: limit * page,
         take: limit + 1,
+        orderBy: { createdAt: "desc" },
         where: {
           user: {
             email: userEmail,
