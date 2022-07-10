@@ -1,6 +1,9 @@
 import { Search2Icon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
+  Grid,
+  GridItem,
   HStack,
   IconButton,
   Input,
@@ -15,6 +18,7 @@ import { trpc } from "../utils/trpc";
 import ErrorMessage from "./ErrorMessage";
 import LoadingSpinner from "./LoadingSpinner";
 import Navbar from "./Navbar";
+import WorkoutCard from "./WorkoutCard";
 
 const Dashboard: React.FC = () => {
   const { data: session } = useSession();
@@ -82,7 +86,6 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  console.log(data.workouts);
   return (
     <Navbar>
       <VStack
@@ -90,7 +93,16 @@ const Dashboard: React.FC = () => {
         bgColor='gray.700'
         w='full'
         pt={10}
+        spacing={6}
       >
+        <Box>
+          <Button
+            colorScheme='purple'
+            onClick={() => router.push("/create-workout")}
+          >
+            Create Workout
+          </Button>
+        </Box>
         <HStack width={{ base: "300px", md: "350px", lg: "450px" }}>
           <Input
             value={title}
@@ -98,7 +110,7 @@ const Dashboard: React.FC = () => {
             bgColor='white'
             focusBorderColor='purple.500'
             borderWidth={2}
-            placeholder='Search for your project...'
+            placeholder='Search for your workout...'
           />
           <IconButton
             aria-label='search'
@@ -107,6 +119,30 @@ const Dashboard: React.FC = () => {
             onClick={() => setTitleFilter(title)}
           />
         </HStack>
+        <Grid
+          templateColumns={{
+            base: "1fr",
+            lg: "repeat(2, 1fr)",
+            xl: "repeat(3, 1fr)",
+          }}
+          templateRows={{
+            base: "6fr",
+            lg: "repeat(3, 1fr)",
+            xl: "repeat(2, 1fr)",
+          }}
+          gap={5}
+          mt={5}
+          pb={5}
+          maxW={{ base: "300px", md: "350px", lg: "650px", xl: "850px" }}
+        >
+          {data.workouts.map((workout) => {
+            return (
+              <GridItem key={workout.id}>
+                <WorkoutCard {...workout} />
+              </GridItem>
+            );
+          })}
+        </Grid>
       </VStack>
     </Navbar>
   );
