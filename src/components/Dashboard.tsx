@@ -1,4 +1,8 @@
-import { Search2Icon } from "@chakra-ui/icons";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  Search2Icon,
+} from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -29,7 +33,7 @@ const Dashboard: React.FC = () => {
   const { data, isLoading, isError, error } = trpc.useQuery([
     "workouts.get-all-workouts",
     {
-      limit: 10,
+      limit: 12,
       page,
       title: titleFilter,
     },
@@ -93,6 +97,7 @@ const Dashboard: React.FC = () => {
         bgColor='gray.700'
         w='full'
         pt={10}
+        pb={10}
         spacing={6}
       >
         <Box>
@@ -143,6 +148,24 @@ const Dashboard: React.FC = () => {
             );
           })}
         </Grid>
+        <HStack spacing={3}>
+          <IconButton
+            aria-label='Go to previous page'
+            disabled={page === 0}
+            icon={<ChevronLeftIcon />}
+            colorScheme='purple'
+            fontSize='2xl'
+            onClick={() => setPage((page) => page - 1)}
+          />
+          <IconButton
+            aria-label='Go to next page'
+            disabled={!data.hasMore}
+            icon={<ChevronRightIcon />}
+            colorScheme='purple'
+            fontSize='2xl'
+            onClick={() => setPage((page) => page + 1)}
+          />
+        </HStack>
       </VStack>
     </Navbar>
   );

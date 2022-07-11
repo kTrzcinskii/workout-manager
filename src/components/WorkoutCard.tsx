@@ -1,5 +1,6 @@
 import { Text, VStack, chakra } from "@chakra-ui/react";
 import { format } from "date-fns";
+import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 
 interface WorkoutCardProps {
@@ -25,6 +26,18 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ title, id, createdAt }) => {
       py={6}
       rounded='lg'
       onClick={() => router.push(`/workout/${id}`)}
+      as={motion.div}
+      variants={{
+        hidden: {
+          opacity: 0,
+        },
+        visible: {
+          opacity: 1,
+          transition: { ease: "easeInOut", duration: 0.2 },
+        },
+      }}
+      initial='hidden'
+      animate='visible'
     >
       <Text color='purple.500' fontSize='2xl' fontWeight='semibold'>
         {title}
