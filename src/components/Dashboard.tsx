@@ -99,6 +99,7 @@ const Dashboard: React.FC = () => {
         pt={10}
         pb={10}
         spacing={6}
+        pos='relative'
       >
         <Box>
           <Button
@@ -137,7 +138,7 @@ const Dashboard: React.FC = () => {
           }}
           gap={5}
           mt={5}
-          pb={5}
+          pb={10}
           maxW={{ base: "300px", md: "350px", lg: "650px", xl: "850px" }}
         >
           {data.workouts.map((workout) => {
@@ -148,7 +149,7 @@ const Dashboard: React.FC = () => {
             );
           })}
         </Grid>
-        <HStack spacing={3}>
+        <HStack spacing={3} pos='absolute' bottom={5} pt={2}>
           <IconButton
             aria-label='Go to previous page'
             disabled={page === 0}
