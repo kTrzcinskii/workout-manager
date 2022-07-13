@@ -69,6 +69,9 @@ export const workoutRouter = createRouter()
 
       const workout = await ctx.prisma.workout.findUnique({
         where: { id: workoutId },
+        include: {
+          exercises: { orderBy: { index: "asc" } },
+        },
       });
       const user = await ctx.prisma.user.findFirst({
         where: { workouts: { some: { id: workoutId } } },
