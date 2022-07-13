@@ -1,14 +1,7 @@
 import { TriangleUpIcon, TriangleDownIcon } from "@chakra-ui/icons";
-import {
-  HStack,
-  Text,
-  chakra,
-  VStack,
-  IconButton,
-  Stack,
-} from "@chakra-ui/react";
+import { HStack, Text, chakra, IconButton, Stack } from "@chakra-ui/react";
 import { Exercise } from "@prisma/client";
-import { EditBtn } from "../pages/workout/[id]";
+import EditContainer from "./EditContainer";
 
 type ExerciseCardProps = Exercise & {
   arrLength: number;
@@ -76,9 +69,11 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
         w={{ base: "full", md: "full", lg: "auto" }}
         justifyContent='center'
       >
-        <EditBtn
+        <EditContainer
           ariaLabel='Edit exercise'
-          onClick={() => console.log("edit exercise " + id)}
+          header='Edit Exercise'
+          body={<></>}
+          footer={<></>}
         />
         <HStack spacing={1}>
           <IconButton

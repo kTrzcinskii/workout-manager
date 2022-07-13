@@ -7,6 +7,7 @@ import {
   IconButton,
   Stack,
   Text,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
@@ -20,38 +21,9 @@ import { navbarHeight } from "../../constants";
 import { trpc } from "../../utils/trpc";
 import { BsFillPlayFill } from "react-icons/bs";
 import { format } from "date-fns";
-
-interface EditBtnProps {
-  onClick: () => void;
-  fontSize?: string;
-  variant?: "purple" | "white";
-  ariaLabel: string;
-}
-
-export const EditBtn: React.FC<EditBtnProps> = ({
-  onClick,
-  fontSize = "2xl",
-  variant = "purple",
-  ariaLabel,
-}) => {
-  const main = variant === "purple" ? "purple.500" : "white";
-  const second = variant === "purple" ? "white" : "purple.500";
-
-  return (
-    <IconButton
-      aria-label={ariaLabel}
-      icon={<EditIcon />}
-      color={main}
-      fontSize={fontSize}
-      variant='ghost'
-      _hover={{
-        bgColor: main,
-        color: second,
-      }}
-      onClick={onClick}
-    />
-  );
-};
+import ModalContainer from "../../components/ModalContainer";
+import { EditBtn } from "../../components/EditBtn";
+import EditContainer from "../../components/EditContainer";
 
 const SingleWorkoutPage: NextPage = () => {
   const [isStarted, setIsStarted] = useState(false);
@@ -82,6 +54,7 @@ const SingleWorkoutPage: NextPage = () => {
   const createdOnFormatted = format(data.createdAt, "do MMMM yyyy");
   const updatedOnFormatted = format(data.updatedAt, "do MMMM yyyy");
 
+  //TODO: every edit-btn + started wrokout page
   if (!isStarted) {
     return (
       <Navbar>
@@ -107,9 +80,11 @@ const SingleWorkoutPage: NextPage = () => {
                   Workout:{" "}
                   <chakra.span color='purple.500'>{data.title}</chakra.span>
                 </Heading>
-                <EditBtn
-                  onClick={() => "edit title"}
-                  ariaLabel='Edit workout title'
+                <EditContainer
+                  header='Edit Title'
+                  body={<Text>hello</Text>}
+                  footer={<Text>Footer</Text>}
+                  ariaLabel='Edit title'
                 />
               </HStack>
               <HStack w='full' fontSize='xl'>
@@ -119,10 +94,12 @@ const SingleWorkoutPage: NextPage = () => {
                     {data.description}
                   </chakra.span>
                 </Text>
-                <EditBtn
+                <EditContainer
                   fontSize='xl'
-                  onClick={() => console.log("edit description")}
-                  ariaLabel='Edit workout descripiton'
+                  ariaLabel='Edit Description'
+                  header='Edit Description'
+                  body={<></>}
+                  footer={<></>}
                 />
               </HStack>
               <HStack w='full'>
@@ -131,10 +108,12 @@ const SingleWorkoutPage: NextPage = () => {
                   <chakra.span color='purple.500'>
                     {data.breakDuration} seconds
                   </chakra.span>{" "}
-                  <EditBtn
-                    onClick={() => console.log("Edit break duration")}
+                  <EditContainer
                     fontSize='lg'
-                    ariaLabel='Edit workout break duration'
+                    ariaLabel='Edit Break Duration'
+                    header='Edit Break Duration'
+                    body={<></>}
+                    footer={<></>}
                   />
                 </Text>
               </HStack>
