@@ -14,7 +14,6 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { navbarHeight } from "../constants";
@@ -25,8 +24,6 @@ import Navbar from "./Navbar";
 import WorkoutCard from "./WorkoutCard";
 
 const Dashboard: React.FC = () => {
-  const { data: session } = useSession();
-
   const [page, setPage] = useState(0);
   const [title, setTitle] = useState("");
   const [titleFilter, setTitleFilter] = useState("");
