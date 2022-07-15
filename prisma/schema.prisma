@@ -62,7 +62,7 @@ model Workout {
   updatedAt DateTime @updatedAt
 
   title         String
-  description   String?
+  description   String
   breakDuration Int
   exercises     Exercise[]
 
