@@ -39,11 +39,25 @@ export const deleteWorkoutInput = z.object({
   workoutId: z.string().min(1),
 });
 
-export const editWorkoutInput = z.object({
-  workoutId: z.string().min(1),
-  title: z.string().optional(),
-  description: z.string().optional(),
-  breakDuration: z.number().optional().or(z.string().optional()),
-});
+export const editWorkoutInput = z
+  .object({
+    workoutId: z.string().min(1),
+    title: z.string().min(1, "Title is required"),
+  })
+  .or(
+    z.object({
+      workoutId: z.string().min(1),
+      description: z.string().min(1, "Description is required"),
+    })
+  )
+  .or(
+    z.object({
+      workoutId: z.string().min(1),
+      breakDuration: z
+        .number()
+        .min(1, "Break Duration is required")
+        .or(z.string().min(1, "Break Duration is required")),
+    })
+  );
 
 export type editWorkoutSchema = z.TypeOf<typeof editWorkoutInput>;

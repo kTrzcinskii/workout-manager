@@ -162,12 +162,25 @@ export const workoutRouter = createRouter()
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
-      const values = {
-        ...data,
-        breakDuration: data.breakDuration
-          ? Number(data.breakDuration)
-          : undefined,
-      };
+      let values:
+        | {
+            title: string;
+          }
+        | {
+            description: string;
+          }
+        | {
+            breakDuration: number;
+          }
+        | {} = {};
+
+      if ("breakDuration" in data) {
+        values = { breakDuration: Number(data.breakDuration) };
+      } else if ("title" in data) {
+        values = { title: data.title };
+      } else if ("description" in data) {
+        values = { description: data.description };
+      }
 
       await ctx.prisma.workout.update({
         where: { id: workoutId },
