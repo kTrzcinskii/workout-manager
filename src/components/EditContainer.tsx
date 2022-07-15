@@ -1,32 +1,56 @@
 import { useDisclosure } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { useState } from "react";
 import { EditBtn } from "./EditBtn";
+import ModalEditInput from "./ModalEditInput";
 import ModalContainer from "./ModalContainer";
+import ModalFormBtnContainer from "./ModalFormBtnContainer";
 
 interface EditContainerProps {
   ariaLabel: string;
   header: string;
-  body: ReactNode;
-  footer: ReactNode;
   fontSize?: string;
+  formId: string;
+  btnText: string;
+  defaultValue: string;
+  workoutId: string;
+  field: "title" | "description" | "breakDuration";
 }
 
 const EditContainer: React.FC<EditContainerProps> = ({
   ariaLabel,
   header,
-  body,
-  footer,
+  formId,
+  btnText,
   fontSize = "2xl",
+  defaultValue,
+  workoutId,
+  field,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <>
       <EditBtn onClick={onOpen} ariaLabel={ariaLabel} fontSize={fontSize} />
       <ModalContainer
         header={header}
-        body={body}
-        footer={footer}
+        body={
+          <ModalEditInput
+            defaultValue={defaultValue}
+            workoutId={workoutId}
+            setIsSubmitting={setIsSubmitting}
+            onClose={onClose}
+            field={field}
+          />
+        }
+        footer={
+          <ModalFormBtnContainer
+            formId={formId}
+            btnText={btnText}
+            onClose={onClose}
+            isSubmitting={isSubmitting}
+          />
+        }
         isOpen={isOpen}
         onClose={onClose}
       />

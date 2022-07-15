@@ -1,4 +1,3 @@
-import { EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   chakra,
@@ -7,23 +6,20 @@ import {
   IconButton,
   Stack,
   Text,
-  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
+import { format } from "date-fns";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { BsFillPlayFill } from "react-icons/bs";
+import EditContainer from "../../components/EditContainer";
 import ErrorMessage from "../../components/ErrorMessage";
 import ExerciseCard from "../../components/ExerciseCard";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Navbar from "../../components/Navbar";
 import { navbarHeight } from "../../constants";
 import { trpc } from "../../utils/trpc";
-import { BsFillPlayFill } from "react-icons/bs";
-import { format } from "date-fns";
-import ModalContainer from "../../components/ModalContainer";
-import { EditBtn } from "../../components/EditBtn";
-import EditContainer from "../../components/EditContainer";
 
 const SingleWorkoutPage: NextPage = () => {
   const [isStarted, setIsStarted] = useState(false);
@@ -54,7 +50,7 @@ const SingleWorkoutPage: NextPage = () => {
   const createdOnFormatted = format(data.createdAt, "do MMMM yyyy");
   const updatedOnFormatted = format(data.updatedAt, "do MMMM yyyy");
 
-  //TODO: every edit-btn + started wrokout page
+  //TODO:started wrokout page
   if (!isStarted) {
     return (
       <Navbar>
@@ -82,9 +78,12 @@ const SingleWorkoutPage: NextPage = () => {
                 </Heading>
                 <EditContainer
                   header='Edit Title'
-                  body={<Text>hello</Text>}
-                  footer={<Text>Footer</Text>}
+                  btnText='Edit Title'
+                  defaultValue={data.title}
+                  formId='edit-title-form'
+                  workoutId={data.id}
                   ariaLabel='Edit title'
+                  field='title'
                 />
               </HStack>
               <HStack w='full' fontSize='xl'>
@@ -95,11 +94,14 @@ const SingleWorkoutPage: NextPage = () => {
                   </chakra.span>
                 </Text>
                 <EditContainer
-                  fontSize='xl'
-                  ariaLabel='Edit Description'
                   header='Edit Description'
-                  body={<></>}
-                  footer={<></>}
+                  btnText='Edit Description'
+                  defaultValue={data.description}
+                  formId='edit-description-form'
+                  workoutId={data.id}
+                  ariaLabel='Edit description'
+                  field='description'
+                  fontSize='xl'
                 />
               </HStack>
               <HStack w='full'>
@@ -109,11 +111,14 @@ const SingleWorkoutPage: NextPage = () => {
                     {data.breakDuration} seconds
                   </chakra.span>{" "}
                   <EditContainer
-                    fontSize='lg'
-                    ariaLabel='Edit Break Duration'
                     header='Edit Break Duration'
-                    body={<></>}
-                    footer={<></>}
+                    btnText='Edit Break Duration'
+                    defaultValue={String(data.breakDuration)}
+                    formId='edit-breakDuration-form'
+                    workoutId={data.id}
+                    ariaLabel='Edit break duration'
+                    field='breakDuration'
+                    fontSize='lg'
                   />
                 </Text>
               </HStack>
