@@ -18,6 +18,7 @@ type FormInputProps = InputHTMLAttributes<HTMLInputElement> &
     isNumberInput?: boolean;
     minValue?: number;
     maxValue?: number;
+    variant?: "gray.800" | "white";
   };
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -27,16 +28,18 @@ const FormInput: React.FC<FormInputProps> = ({
   registerName,
   isNumberInput = false,
   minValue,
+  variant = "white",
   maxValue,
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
+
   return (
     <FormControl isInvalid={errors[registerName]} width='full'>
       {label && (
         <FormLabel
           htmlFor={registerName}
-          color={isFocused ? "purple.400" : "white"}
+          color={isFocused ? "purple.400" : variant}
         >
           {label}
         </FormLabel>
@@ -52,10 +55,10 @@ const FormInput: React.FC<FormInputProps> = ({
             {...register(registerName)}
             {...props}
             borderWidth={2}
-            color='white'
+            color={variant}
             _placeholder={{ color: "gray.300" }}
             focusBorderColor='purple.400'
-            borderColor='white'
+            borderColor={variant}
             _hover={{}}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
@@ -68,10 +71,10 @@ const FormInput: React.FC<FormInputProps> = ({
           {...register(registerName)}
           {...props}
           borderWidth={2}
-          color='white'
+          color={variant}
           _placeholder={{ color: "gray.300" }}
           focusBorderColor='purple.400'
-          borderColor='white'
+          borderColor={variant}
           _hover={{}}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
