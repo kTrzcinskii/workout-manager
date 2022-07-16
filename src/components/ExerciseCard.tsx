@@ -1,4 +1,4 @@
-import { TriangleUpIcon, TriangleDownIcon } from "@chakra-ui/icons";
+import { TriangleUpIcon, TriangleDownIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   HStack,
   Text,
@@ -56,6 +56,33 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
     );
   };
 
+  const { mutate: deleteMutate } = trpc.useMutation([
+    "exercises.delete-exercise",
+  ]);
+
+  const handleDelete = () => {
+    if (arrLength === 1) {
+      toast(
+        errorToastOptions("Your workout must contain at least one exercise!")
+      );
+      return;
+    }
+    deleteMutate(
+      { exerciseId: id },
+      {
+        onSuccess: () => {
+          invalidateUtils.invalidateQueries([
+            "workouts.get-single-workout",
+            { id: workoutId },
+          ]);
+        },
+        onError: (e) => {
+          toast(errorToastOptions(e.message));
+        },
+      }
+    );
+  };
+
   return (
     <Stack
       w={{ base: "full", md: "full", lg: "700px", xl: "750px" }}
@@ -69,8 +96,8 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
     >
       <HStack
         spacing={3}
-        w={{ base: "full", md: "full", lg: "auto" }}
-        justifyContent='center'
+        w={{ base: "full", md: "full", lg: "134px" }}
+        justifyContent='flex-start'
         fontSize={{ base: "3xl", md: "3xl", lg: "xl" }}
       >
         <Text fontWeight='bold' color='purple.500'>
@@ -82,6 +109,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
         spacing={4}
         w={{ base: "full", md: "full", lg: "auto" }}
         justifyContent='center'
+        mx='auto'
       >
         <Text>
           Series:{" "}
@@ -105,7 +133,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
         )}
       </HStack>
       <HStack
-        spacing={5}
+        spacing={3}
         w={{ base: "full", md: "full", lg: "auto" }}
         justifyContent='center'
       >
@@ -141,6 +169,18 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
             onClick={() => handleClick(index + 1)}
           />
         </HStack>
+        <IconButton
+          aria-label='Delete Exercise'
+          icon={<DeleteIcon />}
+          color='red.500'
+          fontSize='2xl'
+          variant='ghost'
+          _hover={{
+            bgColor: "red.500",
+            color: "white",
+          }}
+          onClick={handleDelete}
+        />
       </HStack>
     </Stack>
   );
