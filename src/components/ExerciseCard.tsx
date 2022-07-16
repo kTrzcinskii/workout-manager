@@ -1,7 +1,16 @@
 import { TriangleUpIcon, TriangleDownIcon } from "@chakra-ui/icons";
-import { HStack, Text, chakra, IconButton, Stack } from "@chakra-ui/react";
+import {
+  HStack,
+  Text,
+  chakra,
+  IconButton,
+  Stack,
+  UseToastOptions,
+  useToast,
+} from "@chakra-ui/react";
 import { Exercise } from "@prisma/client";
-import EditContainer from "./EditContainer";
+import { trpc } from "../utils/trpc";
+import { EditBtn } from "./EditBtn";
 
 type ExerciseCardProps = Exercise & {
   arrLength: number;
@@ -15,7 +24,38 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
   weight,
   id,
   arrLength,
+  workoutId,
 }) => {
+  const { mutate } = trpc.useMutation("exercises.change-index");
+  const invalidateUtils = trpc.useContext();
+
+  const toast = useToast();
+  const errorToastOptions = (msg: string): UseToastOptions => ({
+    position: "top",
+    status: "error",
+    title: "Error",
+    description: msg,
+    isClosable: true,
+    duration: 3000,
+  });
+
+  const handleClick = (newIndex: number) => {
+    mutate(
+      { workoutId, exerciseId: id, newIndex },
+      {
+        onSuccess: () => {
+          invalidateUtils.invalidateQueries([
+            "workouts.get-single-workout",
+            { id: workoutId },
+          ]);
+        },
+        onError: (e) => {
+          toast(errorToastOptions(e.message));
+        },
+      }
+    );
+  };
+
   return (
     <Stack
       w={{ base: "full", md: "full", lg: "700px", xl: "750px" }}
@@ -69,11 +109,9 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
         w={{ base: "full", md: "full", lg: "auto" }}
         justifyContent='center'
       >
-        <EditContainer
-          ariaLabel='Edit exercise'
-          header='Edit Exercise'
-          body={<></>}
-          footer={<></>}
+        <EditBtn
+          onClick={() => console.log("edit exercise")}
+          ariaLabel='Edit Exercise'
         />
         <HStack spacing={1}>
           <IconButton
@@ -87,7 +125,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
               color: "white",
             }}
             disabled={index === 0}
-            //   onClick={() => move(index, index - 1)}
+            onClick={() => handleClick(index - 1)}
           />
           <IconButton
             aria-label='move down'
@@ -100,7 +138,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
               color: "white",
             }}
             disabled={arrLength - 1 === index}
-            //   onClick={() => move(index, index + 1)}
+            onClick={() => handleClick(index + 1)}
           />
         </HStack>
       </HStack>
