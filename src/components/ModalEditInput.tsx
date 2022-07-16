@@ -43,6 +43,15 @@ const EditTitleForm: React.FC<EditTitleFormProps> = ({
     duration: 2000,
   });
 
+  const errorToastOptions = (msg: string): UseToastOptions => ({
+    position: "top",
+    status: "error",
+    title: "Error",
+    description: msg,
+    isClosable: true,
+    duration: 3000,
+  });
+
   const onSubmit = (values: editWorkoutSchema) => {
     setIsSubmitting(true);
     mutate(values, {
@@ -54,6 +63,11 @@ const EditTitleForm: React.FC<EditTitleFormProps> = ({
           { id: workoutId },
         ]);
         toast(toastOptions());
+        onClose();
+      },
+      onError: (e) => {
+        setIsSubmitting(false);
+        toast(errorToastOptions(e.message));
         onClose();
       },
     });
