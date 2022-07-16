@@ -1,5 +1,8 @@
 import { TRPCError } from "@trpc/server";
-import { changeExerciseIndexInput } from "../schema/exercise";
+import {
+  changeExerciseIndexInput,
+  deleteExerciseInput,
+} from "../schema/exercise";
 import { createRouter } from "./context";
 
 export const exerciseRouter = createRouter()
@@ -62,5 +65,28 @@ export const exerciseRouter = createRouter()
       });
 
       return { sueccessful: true };
+    },
+  })
+  .mutation("delete-exercise", {
+    input: deleteExerciseInput,
+    async resolve({ ctx, input }) {
+      const userEmail = ctx.session?.user?.email!;
+
+      const exercise = await ctx.prisma.exercise.findUnique({
+        where: { id: input.exerciseId },
+        include: {
+          workout: {
+            include: { user: true },
+          },
+        },
+      });
+
+      if (!exercise || exercise.workout.user.email !== userEmail) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      await ctx.prisma.exercise.delete({ where: { id: input.exerciseId } });
+
+      return { successful: true };
     },
   });
