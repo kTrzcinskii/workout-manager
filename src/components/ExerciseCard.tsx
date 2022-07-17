@@ -11,6 +11,7 @@ import {
 import { Exercise } from "@prisma/client";
 import { trpc } from "../utils/trpc";
 import { EditBtn } from "./EditBtn";
+import EditExerciseContainer from "./EditExerciseContainer";
 
 type ExerciseCardProps = Exercise & {
   arrLength: number;
@@ -25,6 +26,8 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
   id,
   arrLength,
   workoutId,
+  createdAt,
+  updatedAt,
 }) => {
   const { mutate } = trpc.useMutation("exercises.change-index");
   const invalidateUtils = trpc.useContext();
@@ -39,6 +42,8 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
     duration: 3000,
   });
 
+  //TODO: edit exercise logic
+
   const handleClick = (newIndex: number) => {
     mutate(
       { workoutId, exerciseId: id, newIndex },
@@ -48,6 +53,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
             "workouts.get-single-workout",
             { id: workoutId },
           ]);
+          invalidateUtils.invalidateQueries(["workouts.get-all-workouts"]);
         },
         onError: (e) => {
           toast(errorToastOptions(e.message));
@@ -85,7 +91,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
   return (
     <Stack
-      w={{ base: "full", md: "full", lg: "700px", xl: "750px" }}
+      w={{ base: "full", md: "full", lg: "800px", xl: "1000px" }}
       bgColor='white'
       py={5}
       px={6}
@@ -97,7 +103,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
       <HStack
         spacing={3}
         w={{ base: "full", md: "full", lg: "134px" }}
-        justifyContent='flex-start'
+        justifyContent={{ base: "center", md: "center", lg: "flex-start" }}
         fontSize={{ base: "3xl", md: "3xl", lg: "xl" }}
       >
         <Text fontWeight='bold' color='purple.500'>
@@ -137,9 +143,16 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
         w={{ base: "full", md: "full", lg: "auto" }}
         justifyContent='center'
       >
-        <EditBtn
-          onClick={() => console.log("edit exercise")}
-          ariaLabel='Edit Exercise'
+        <EditExerciseContainer
+          createdAt={createdAt}
+          updatedAt={updatedAt}
+          id={id}
+          index={index}
+          repsInOneSeries={repsInOneSeries}
+          series={series}
+          title={title}
+          weight={weight}
+          workoutId={workoutId}
         />
         <HStack spacing={1}>
           <IconButton
