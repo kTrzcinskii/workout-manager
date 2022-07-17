@@ -20,3 +20,17 @@ export const changeExerciseIndexInput = z.object({
 export const deleteExerciseInput = z.object({
   exerciseId: z.string().min(1),
 });
+
+export const editExerciseInput = z.object({
+  workoutId: z.string().min(1),
+  exerciseId: z.string().min(1),
+  title: z.string().min(1, "Title is required"),
+  series: z.number().min(1).or(z.string().min(1, "Series are required")),
+  repsInOneSeries: z
+    .number()
+    .min(1)
+    .or(z.string().min(1, "Reps in one series are required")),
+  weight: z.number().optional().or(z.string().optional()),
+});
+
+export type editExerciseSchema = z.TypeOf<typeof editExerciseInput>;
