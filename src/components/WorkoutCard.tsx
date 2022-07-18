@@ -30,10 +30,12 @@ const WorkoutCard: React.FC<WorkoutCardProps> = ({ title, id, createdAt }) => {
       variants={{
         hidden: {
           opacity: 0,
+          transform: "translateY(-50%)",
         },
         visible: {
           opacity: 1,
-          transition: { ease: "easeInOut", duration: 0.2 },
+          transform: "translateY(0%)",
+          transition: { ease: "backInOut", duration: 0.3 },
         },
       }}
       initial='hidden'
