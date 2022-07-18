@@ -28,7 +28,7 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{header}</ModalHeader>
+        <ModalHeader color='purple.500'>{header}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>{body}</ModalBody>
         <ModalFooter>{footer}</ModalFooter>
