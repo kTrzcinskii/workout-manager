@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import {
+  addExerciseInput,
   changeExerciseIndexInput,
   deleteExerciseInput,
   editExerciseInput,
@@ -119,6 +120,35 @@ export const exerciseRouter = createRouter()
       await ctx.prisma.exercise.update({
         where: { id: input.exerciseId },
         data: { ...dataForNewExercise },
+      });
+
+      return { successful: true };
+    },
+  })
+  .mutation("add-exercise-to-existing-project", {
+    input: addExerciseInput,
+    async resolve({ ctx, input }) {
+      const userEmail = ctx.session?.user?.email!;
+
+      const workout = await ctx.prisma.workout.findUnique({
+        where: { id: input.workoutId },
+        include: { user: true },
+      });
+
+      if (!workout || workout.user.email !== userEmail) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      const data = {
+        title: input.title,
+        weight: input.weight ? Number(input.weight) : null,
+        series: Number(input.series),
+        repsInOneSeries: Number(input.repsInOneSeries),
+        index: Number(input.index),
+      };
+
+      await ctx.prisma.exercise.create({
+        data: { workout: { connect: { id: input.workoutId } }, ...data },
       });
 
       return { successful: true };
