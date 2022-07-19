@@ -87,6 +87,15 @@ export const exerciseRouter = createRouter()
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
+      await ctx.prisma.exercise.updateMany({
+        where: { workoutId: exercise.workoutId, index: { gt: exercise.index } },
+        data: {
+          index: {
+            decrement: 1,
+          },
+        },
+      });
+
       await ctx.prisma.exercise.delete({ where: { id: input.exerciseId } });
 
       return { successful: true };
