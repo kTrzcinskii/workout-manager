@@ -13,6 +13,7 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
+import AddExerciseBtn from "../../components/AddExerciseBtn";
 import EditContainer from "../../components/EditContainer";
 import ErrorMessage from "../../components/ErrorMessage";
 import ExerciseCard from "../../components/ExerciseCard";
@@ -51,6 +52,7 @@ const SingleWorkoutPage: NextPage = () => {
   const updatedOnFormatted = format(data.updatedAt, "do MMMM yyyy");
 
   //TODO:started wrokout page
+  //TODO:add-exercise btn
   if (!isStarted) {
     return (
       <Navbar>
@@ -152,6 +154,10 @@ const SingleWorkoutPage: NextPage = () => {
               );
             })}
           </VStack>
+          <AddExerciseBtn
+            arrLength={data.exercises.length}
+            workoutId={data.id}
+          />
           <Box pt={20}>
             <IconButton
               aria-label='Start workout'

@@ -42,8 +42,6 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
     duration: 3000,
   });
 
-  //TODO: edit exercise logic
-
   const handleClick = (newIndex: number) => {
     mutate(
       { workoutId, exerciseId: id, newIndex },
