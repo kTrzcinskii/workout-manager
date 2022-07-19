@@ -19,6 +19,7 @@ import ErrorMessage from "../../components/ErrorMessage";
 import ExerciseCard from "../../components/ExerciseCard";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Navbar from "../../components/Navbar";
+import StartedWorkout from "../../components/StartedWorkout";
 import { navbarHeight } from "../../constants";
 import { trpc } from "../../utils/trpc";
 
@@ -52,7 +53,6 @@ const SingleWorkoutPage: NextPage = () => {
   const updatedOnFormatted = format(data.updatedAt, "do MMMM yyyy");
 
   //TODO:started wrokout page
-  //TODO:add-exercise btn
   if (!isStarted) {
     return (
       <Navbar>
@@ -158,7 +158,7 @@ const SingleWorkoutPage: NextPage = () => {
             arrLength={data.exercises.length}
             workoutId={data.id}
           />
-          <Box pt={20}>
+          <Box py={20}>
             <IconButton
               aria-label='Start workout'
               colorScheme='purple'
@@ -176,7 +176,7 @@ const SingleWorkoutPage: NextPage = () => {
 
   return (
     <Navbar>
-      <Text>STARTED</Text>
+      <StartedWorkout {...data} setIsStarted={setIsStarted} />
     </Navbar>
   );
 };
