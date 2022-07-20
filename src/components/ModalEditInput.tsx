@@ -73,6 +73,8 @@ const EditTitleForm: React.FC<EditTitleFormProps> = ({
     });
   };
 
+  const type = field === "breakDuration" ? "number" : "text";
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} id={`edit-${field}-form`}>
       <FormInput
@@ -82,6 +84,7 @@ const EditTitleForm: React.FC<EditTitleFormProps> = ({
         placeholder={`Enter ${fieldMessage}`}
         defaultValue={defaultValue}
         variant='gray.800'
+        type={type}
       />
       <Input
         id='workoutId'
