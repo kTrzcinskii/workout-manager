@@ -1,11 +1,15 @@
+import { DeleteIcon } from "@chakra-ui/icons";
 import {
-  Box,
+  Button,
   chakra,
   Heading,
   HStack,
   IconButton,
   Stack,
   Text,
+  useDisclosure,
+  useToast,
+  UseToastOptions,
   VStack,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
@@ -18,13 +22,88 @@ import EditContainer from "../../components/EditContainer";
 import ErrorMessage from "../../components/ErrorMessage";
 import ExerciseCard from "../../components/ExerciseCard";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import ModalContainer from "../../components/ModalContainer";
 import Navbar from "../../components/Navbar";
 import StartedWorkout from "../../components/StartedWorkout";
 import { navbarHeight } from "../../constants";
 import { trpc } from "../../utils/trpc";
 
+const Body: React.FC = () => {
+  return (
+    <Text>
+      Are you sure you want to delete your workout? This action is{" "}
+      <chakra.span fontWeight='semibold'>irreversible</chakra.span> and all the
+      data related to this workout will be lost.
+    </Text>
+  );
+};
+
+interface FooterProps {
+  onClose: () => void;
+  workoutId: string;
+}
+
+const Footer: React.FC<FooterProps> = ({ onClose, workoutId }) => {
+  const { mutate, isLoading } = trpc.useMutation(["workouts.delete-workout"]);
+
+  const toast = useToast();
+  const successfulToastOptions = (): UseToastOptions => ({
+    position: "top",
+    status: "success",
+    title: "Success",
+    description:
+      "Workout has been successfully deleted, you will be redirected to home page.",
+    isClosable: true,
+    duration: 2000,
+  });
+  const errorToastOptions = (msg: string): UseToastOptions => ({
+    position: "top",
+    status: "error",
+    title: "Error",
+    description: msg,
+    isClosable: true,
+    duration: 3000,
+  });
+  const invalidateUtils = trpc.useContext();
+
+  const router = useRouter();
+
+  const onClick = () => {
+    mutate(
+      { workoutId },
+      {
+        onSuccess: () => {
+          toast(successfulToastOptions());
+          invalidateUtils.invalidateQueries(["workouts.get-all-workouts"]);
+          setTimeout(() => {
+            router.push("/");
+          }, 1500);
+        },
+        onError: (e) => {
+          toast(errorToastOptions(e.message));
+        },
+      }
+    );
+  };
+
+  return (
+    <HStack w='full' justifyContent='space-around'>
+      <Button
+        isLoading={isLoading}
+        loadingText='Delete Workout'
+        colorScheme='red'
+        onClick={onClick}
+      >
+        Delete Workout
+      </Button>
+      <Button onClick={onClose}>Cancel</Button>
+    </HStack>
+  );
+};
+
 const SingleWorkoutPage: NextPage = () => {
   const [isStarted, setIsStarted] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const router = useRouter();
   const { id } = router.query;
@@ -157,7 +236,7 @@ const SingleWorkoutPage: NextPage = () => {
             arrLength={data.exercises.length}
             workoutId={data.id}
           />
-          <Box py={20}>
+          <HStack py={20} spacing={12}>
             <IconButton
               aria-label='Start workout'
               colorScheme='purple'
@@ -167,7 +246,23 @@ const SingleWorkoutPage: NextPage = () => {
                 <BsFillPlayFill size={70} onClick={() => setIsStarted(true)} />
               }
             />
-          </Box>
+            <IconButton
+              aria-label='Delete workout'
+              colorScheme='red'
+              rounded='2xl'
+              boxSize={20}
+              fontSize='4xl'
+              icon={<DeleteIcon />}
+              onClick={onOpen}
+            />
+            <ModalContainer
+              header='Delete Workout'
+              isOpen={isOpen}
+              onClose={onClose}
+              body={<Body />}
+              footer={<Footer onClose={onClose} workoutId={data.id} />}
+            />
+          </HStack>
         </VStack>
       </Navbar>
     );
