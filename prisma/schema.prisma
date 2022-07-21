@@ -66,7 +66,7 @@ model Workout {
   breakDuration Int
   exercises     Exercise[]
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }
 
@@ -81,6 +81,6 @@ model Exercise {
   index           Int
   weight          Int?
 
-  workout   Workout @relation(fields: [workoutId], references: [id])
+  workout   Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   workoutId String
 }
