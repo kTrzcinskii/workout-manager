@@ -15,6 +15,8 @@ interface ModalContainerProps {
   header: string;
   body: ReactNode;
   footer: ReactNode;
+  showCloseBtn?: boolean;
+  closeOnClickOnOverlay?: boolean;
 }
 
 const ModalContainer: React.FC<ModalContainerProps> = ({
@@ -23,13 +25,21 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
   header,
   body,
   footer,
+  showCloseBtn = true,
+  closeOnClickOnOverlay = true,
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered={true}
+      closeOnOverlayClick={closeOnClickOnOverlay}
+      closeOnEsc={false}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader color='purple.500'>{header}</ModalHeader>
-        <ModalCloseButton />
+        {showCloseBtn && <ModalCloseButton />}
         <ModalBody>{body}</ModalBody>
         <ModalFooter>{footer}</ModalFooter>
       </ModalContent>
