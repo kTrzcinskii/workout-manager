@@ -376,7 +376,7 @@ const StartedWorkout: React.FC<StartedWorkoutProps> = ({
             <Placeholder />
           )}
         </Stack>
-        <Box pt={10}>
+        <Box py={10}>
           <Button colorScheme='red' onClick={() => setIsStarted(false)}>
             Stop Workout
           </Button>
