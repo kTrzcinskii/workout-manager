@@ -52,7 +52,6 @@ const SingleWorkoutPage: NextPage = () => {
   const createdOnFormatted = format(data.createdAt, "do MMMM yyyy");
   const updatedOnFormatted = format(data.updatedAt, "do MMMM yyyy");
 
-  //TODO:started wrokout page
   if (!isStarted) {
     return (
       <Navbar>
