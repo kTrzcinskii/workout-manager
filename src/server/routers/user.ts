@@ -1,6 +1,6 @@
 import { Workout } from ".prisma/client";
 import { TRPCError } from "@trpc/server";
-import { getUserInfoInput } from "../schema/user";
+import { getUserInfoInput, setLastDoneWorkoutInput } from "../schema/user";
 import { createRouter } from "./context";
 
 interface WorkoutInfo {
@@ -80,5 +80,22 @@ export const userRouter = createRouter()
       delete userReturn.workouts;
 
       return userReturn;
+    },
+  })
+  .mutation("set-last-done-workout", {
+    input: setLastDoneWorkoutInput,
+    async resolve({ ctx, input }) {
+      const userEmail = ctx.session!.user!.email!;
+
+      await ctx.prisma.user.update({
+        where: {
+          email: userEmail,
+        },
+        data: {
+          lastDoneWorkout: input.workoutId,
+        },
+      });
+
+      return { successful: true };
     },
   });

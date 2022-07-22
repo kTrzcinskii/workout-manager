@@ -132,7 +132,7 @@ const ProfilePage: NextPage = () => {
             {user.lastDoneWorkout.workoutId && user.lastDoneWorkout.name && (
               <TextWithLink
                 link={user.lastDoneWorkout.workoutId}
-                name='Your favorite workout'
+                name='Your last done workout'
                 title={user.lastDoneWorkout.name}
               />
             )}

@@ -12,6 +12,7 @@ import { Exercise, Workout } from "@prisma/client";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { navbarHeight } from "../constants";
+import { trpc } from "../utils/trpc";
 import ModalContainer from "./ModalContainer";
 
 interface TextWithSpanProps {
@@ -284,6 +285,7 @@ const StartedWorkout: React.FC<StartedWorkoutProps> = ({
   title,
   exercises,
   breakDuration,
+  id,
 }) => {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [isBreak, setIsBreak] = useState(false);
@@ -291,6 +293,8 @@ const StartedWorkout: React.FC<StartedWorkoutProps> = ({
   const [seriesNumber, setSeriesNumber] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSwitching, setIsSwitching] = useState(false);
+  const { mutate } = trpc.useMutation(["users.set-last-done-workout"]);
+  const invalidateUtils = trpc.useContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -393,7 +397,23 @@ const StartedWorkout: React.FC<StartedWorkoutProps> = ({
           </Text>
         }
         footer={
-          <Button onClick={() => router.push("/")} colorScheme='purple'>
+          <Button
+            onClick={() => {
+              mutate(
+                { workoutId: id },
+                {
+                  onSuccess: () => {
+                    router.push("/");
+                    invalidateUtils.invalidateQueries(["users.get-user-info"]);
+                  },
+                  onError: () => {
+                    router.push("/");
+                  },
+                }
+              );
+            }}
+            colorScheme='purple'
+          >
             Finish Workout
           </Button>
         }
