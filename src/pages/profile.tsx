@@ -108,6 +108,7 @@ const ProfilePage: NextPage = () => {
             <VStack
               height={{ base: "auto", md: "auto", lg: "300px" }}
               justifyContent='center'
+              minW='364px'
             >
               <TextWithSpan name='Username' value={user.name!} />
               <TextWithSpan name='Email' value={user.email!} />
