@@ -98,4 +98,20 @@ export const userRouter = createRouter()
 
       return { successful: true };
     },
+  })
+  .mutation("increase-num-of-done-workouts", {
+    async resolve({ ctx }) {
+      const userEmail = ctx.session!.user!.email!;
+
+      await ctx.prisma.user.update({
+        where: {
+          email: userEmail,
+        },
+        data: {
+          numOfDoneWorkouts: {
+            increment: 1,
+          },
+        },
+      });
+    },
   });
