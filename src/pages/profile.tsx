@@ -122,21 +122,29 @@ const ProfilePage: NextPage = () => {
               />
             </VStack>
           </Stack>
-          <VStack pt={8}>
+          <VStack pt={8} minW='364px'>
             {user.favoriteWorkout.workoutId && user.favoriteWorkout.name && (
               <TextWithLink
                 link={user.favoriteWorkout.workoutId}
-                name='Your favorite workout'
+                name='Favorite workout'
                 title={user.favoriteWorkout.name}
               />
             )}
             {user.lastDoneWorkout.workoutId && user.lastDoneWorkout.name && (
               <TextWithLink
                 link={user.lastDoneWorkout.workoutId}
-                name='Your last done workout'
+                name='Last done workout'
                 title={user.lastDoneWorkout.name}
               />
             )}
+            {user.recentlyCreatedWorkout.name &&
+              user.recentlyCreatedWorkout.workoutId && (
+                <TextWithLink
+                  link={user.recentlyCreatedWorkout.workoutId}
+                  name='Recently created workout'
+                  title={user.recentlyCreatedWorkout.name}
+                />
+              )}
           </VStack>
         </VStack>
       </Navbar>

@@ -33,7 +33,11 @@ export const userRouter = createRouter()
           favoriteWorkout: true,
           lastDoneWorkout: true,
           numOfDoneWorkouts: true,
-          workouts: true,
+          workouts: {
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
         },
       });
       const sessionEmail = ctx.session!.user!.email!;
@@ -67,6 +71,7 @@ export const userRouter = createRouter()
         numOfDoneWorkouts: number;
         workouts?: Workout[];
         numOfWorkouts: number;
+        recentlyCreatedWorkout: WorkoutInfo;
       } = {
         ...user,
         favoriteWorkout: {
@@ -78,6 +83,10 @@ export const userRouter = createRouter()
           name: lastDoneWorkout?.title || null,
         },
         numOfWorkouts,
+        recentlyCreatedWorkout: {
+          name: user.workouts[0]?.title || null,
+          workoutId: user.workouts[0]?.title || null,
+        },
       };
 
       delete userReturn.workouts;
