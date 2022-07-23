@@ -1,6 +1,9 @@
 import { Workout } from ".prisma/client";
 import { TRPCError } from "@trpc/server";
-import { getUserInfoInput, setLastDoneWorkoutInput } from "../schema/user";
+import {
+  getUserInfoInput,
+  increaseNumOfDoneWorkoutsInput,
+} from "../schema/user";
 import { createRouter } from "./context";
 
 interface WorkoutInfo {
@@ -82,26 +85,39 @@ export const userRouter = createRouter()
       return userReturn;
     },
   })
-  .mutation("set-last-done-workout", {
-    input: setLastDoneWorkoutInput,
+  .mutation("increase-num-of-done-workouts", {
+    input: increaseNumOfDoneWorkoutsInput,
     async resolve({ ctx, input }) {
       const userEmail = ctx.session!.user!.email!;
 
-      await ctx.prisma.user.update({
+      const workoutToUpdate = await ctx.prisma.workout.findUnique({
         where: {
-          email: userEmail,
+          id: input.workoutId,
         },
-        data: {
-          lastDoneWorkout: input.workoutId,
-        },
+        include: { user: true },
       });
 
-      return { successful: true };
-    },
-  })
-  .mutation("increase-num-of-done-workouts", {
-    async resolve({ ctx }) {
-      const userEmail = ctx.session!.user!.email!;
+      if (!workoutToUpdate || workoutToUpdate.user.email !== userEmail) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      let favWorkout: Workout | null = null;
+      if (workoutToUpdate.user.favoriteWorkout) {
+        favWorkout = await ctx.prisma.workout.findUnique({
+          where: {
+            id: workoutToUpdate.user.favoriteWorkout,
+          },
+        });
+      }
+
+      let newFavWorkout = favWorkout?.id;
+
+      if (
+        !favWorkout ||
+        favWorkout.numOfDones < workoutToUpdate.numOfDones + 1
+      ) {
+        newFavWorkout = workoutToUpdate.id;
+      }
 
       await ctx.prisma.user.update({
         where: {
@@ -111,7 +127,20 @@ export const userRouter = createRouter()
           numOfDoneWorkouts: {
             increment: 1,
           },
+          lastDoneWorkout: input.workoutId,
+          favoriteWorkout: newFavWorkout,
         },
       });
+
+      await ctx.prisma.workout.update({
+        where: { id: input.workoutId },
+        data: {
+          numOfDones: {
+            increment: 1,
+          },
+        },
+      });
+
+      return { successful: true };
     },
   });

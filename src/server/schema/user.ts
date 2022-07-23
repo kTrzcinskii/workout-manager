@@ -4,6 +4,6 @@ export const getUserInfoInput = z.object({
   userEmail: z.string().email(),
 });
 
-export const setLastDoneWorkoutInput = z.object({
-  workoutId: z.string().min(1),
+export const increaseNumOfDoneWorkoutsInput = z.object({
+  workoutId: z.string(),
 });

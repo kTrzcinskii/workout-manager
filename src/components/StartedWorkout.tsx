@@ -293,10 +293,7 @@ const StartedWorkout: React.FC<StartedWorkoutProps> = ({
   const [seriesNumber, setSeriesNumber] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSwitching, setIsSwitching] = useState(false);
-  const { mutate } = trpc.useMutation(["users.set-last-done-workout"]);
-  const { mutate: mutateNum } = trpc.useMutation([
-    "users.increase-num-of-done-workouts",
-  ]);
+  const { mutate } = trpc.useMutation(["users.increase-num-of-done-workouts"]);
   const invalidateUtils = trpc.useContext();
   const router = useRouter();
 
@@ -410,11 +407,6 @@ const StartedWorkout: React.FC<StartedWorkoutProps> = ({
                   },
                 }
               );
-              mutateNum(null, {
-                onSuccess: () => {
-                  invalidateUtils.invalidateQueries(["users.get-user-info"]);
-                },
-              });
               router.push("/");
             }}
             colorScheme='purple'
