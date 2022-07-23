@@ -1,4 +1,12 @@
-import { Box, Stack, Text, VStack, chakra, Link } from "@chakra-ui/react";
+import {
+  Box,
+  Stack,
+  Text,
+  VStack,
+  chakra,
+  Link,
+  Button,
+} from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -66,6 +74,8 @@ const ProfilePage: NextPage = () => {
     "users.get-user-info",
     { userEmail: session?.user!.email! },
   ]);
+
+  const router = useRouter();
 
   if (isLoadingUser) {
     return (
@@ -146,6 +156,9 @@ const ProfilePage: NextPage = () => {
                 />
               )}
           </VStack>
+          <Box py={20} onClick={() => router.push("/")}>
+            <Button colorScheme='purple'>Go to Home Page</Button>
+          </Box>
         </VStack>
       </Navbar>
     );
