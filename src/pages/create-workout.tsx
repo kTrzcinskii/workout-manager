@@ -18,6 +18,7 @@ import { trpc } from "../utils/trpc";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ExerciseInput from "../components/ExerciseInput";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const CreateWorkoutPage: NextPage = () => {
   const {
@@ -75,6 +76,9 @@ const CreateWorkoutPage: NextPage = () => {
 
   return (
     <Navbar>
+      <Head>
+        <title>Create New Workout</title>
+      </Head>
       <VStack
         minH={`calc(100vh - ${navbarHeight})`}
         bgColor='gray.700'

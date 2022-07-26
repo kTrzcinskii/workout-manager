@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import type { NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
@@ -134,6 +135,9 @@ const SingleWorkoutPage: NextPage = () => {
   if (!isStarted) {
     return (
       <Navbar>
+        <Head>
+          <title>{data.title}</title>
+        </Head>
         <VStack
           minH={`calc(100vh - ${navbarHeight})`}
           bgColor='gray.700'
@@ -270,6 +274,9 @@ const SingleWorkoutPage: NextPage = () => {
 
   return (
     <Navbar>
+      <Head>
+        <title>{data.title} in progress</title>
+      </Head>
       <StartedWorkout {...data} setIsStarted={setIsStarted} />
     </Navbar>
   );

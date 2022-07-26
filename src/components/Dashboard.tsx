@@ -14,6 +14,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { navbarHeight } from "../constants";
@@ -47,6 +48,9 @@ const Dashboard: React.FC = () => {
   if (isLoading) {
     return (
       <Navbar>
+        <Head>
+          <title>Loading...</title>
+        </Head>
         <LoadingSpinner />
       </Navbar>
     );
@@ -60,6 +64,9 @@ const Dashboard: React.FC = () => {
   if ((!data.workouts || data.workouts.length === 0) && titleFilter === "") {
     return (
       <Navbar>
+        <Head>
+          <title>Workout Manager</title>
+        </Head>
         <VStack
           minH={`calc(100vh - ${navbarHeight})`}
           bgColor='gray.700'
@@ -89,6 +96,9 @@ const Dashboard: React.FC = () => {
 
   return (
     <Navbar>
+      <Head>
+        <title>Workout Manger</title>
+      </Head>
       <VStack
         minH={`calc(100vh - ${navbarHeight})`}
         bgColor='gray.700'

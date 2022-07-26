@@ -17,6 +17,7 @@ import Navbar from "../components/Navbar";
 import { navbarHeight } from "../constants";
 import { trpc } from "../utils/trpc";
 import NextLink from "next/link";
+import Head from "next/head";
 
 interface TextWithSpanProps {
   name: string;
@@ -96,6 +97,9 @@ const ProfilePage: NextPage = () => {
   if (session) {
     return (
       <Navbar>
+        <Head>
+          <title>{user.name}&apos;s Profile</title>
+        </Head>
         <VStack
           minH={`calc(100vh - ${navbarHeight})`}
           bgColor='gray.700'

@@ -9,10 +9,14 @@ import {
 import { signIn } from "next-auth/react";
 import { BsGithub, BsGoogle } from "react-icons/bs";
 import NextLink from "next/link";
+import Head from "next/head";
 
 const LoginSection: React.FC = () => {
   return (
     <VStack h='100vh' w='full' bgColor='gray.800' justifyContent='center'>
+      <Head>
+        <title>Welcome to Workout Manager</title>
+      </Head>
       <VStack spacing={{ base: 4, md: 5, lg: 6 }} role='group'>
         <Heading
           color='white'

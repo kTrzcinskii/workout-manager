@@ -19,6 +19,7 @@ import Navbar from "../components/Navbar";
 import { navbarHeight } from "../constants";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 interface MyAccordionItemProps {
   title: string;
@@ -59,6 +60,9 @@ const AboutPage: NextPage = () => {
   if (session) {
     return (
       <Navbar>
+        <Head>
+          <title>About</title>
+        </Head>
         <VStack
           minH={`calc(100vh - ${navbarHeight})`}
           bgColor='gray.700'
