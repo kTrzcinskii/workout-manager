@@ -107,7 +107,10 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
                 color='red.500'
                 fontWeight='semibold'
                 icon={<VscSignOut size={20} />}
-                onClick={() => signOut()}
+                onClick={() => {
+                  signOut();
+                  router.push("/");
+                }}
               >
                 Sign out
               </MenuItem>
