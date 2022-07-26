@@ -320,7 +320,7 @@ const StartedWorkout: React.FC<StartedWorkoutProps> = ({
         alignItems='center'
         spacing={12}
       >
-        <Heading color='purple.500' fontSize='6xl'>
+        <Heading color='purple.500' fontSize={{ base: "4xl", md: "5xl" }}>
           {title}
         </Heading>
         <Stack
