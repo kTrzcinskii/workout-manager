@@ -14,7 +14,7 @@ import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { CgProfile } from "react-icons/cg";
-import { FiSettings } from "react-icons/fi";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 import { VscSignOut } from "react-icons/vsc";
 import ErrorMessage from "./ErrorMessage";
 
@@ -96,10 +96,10 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
                 _focus={{ bgColor: "purple.500" }}
                 color='white'
                 fontWeight='semibold'
-                icon={<FiSettings size={20} />}
-                onClick={() => router.push("/settings")}
+                icon={<AiOutlineInfoCircle size={20} />}
+                onClick={() => router.push("/about")}
               >
-                Settings
+                About
               </MenuItem>
               <MenuItem
                 _hover={{ bgColor: "purple.500" }}
